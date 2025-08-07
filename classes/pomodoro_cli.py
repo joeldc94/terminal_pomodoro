@@ -2,7 +2,7 @@ import time
 from rich.console import Console
 from rich.live import Live
 from rich.text import Text
-from lib.get_keypress import get_keypress
+from utils.get_keypress import get_keypress
 
 from .pomodoro_session import PomodoroSession
 from .config_file import ConfigFile
@@ -17,11 +17,11 @@ class PomodoroCLI:
     def show_idle_menu(self):
         settings = self.config.settings
         self.console.clear()
-        self.console.print("🍅 Pomodoro Terminal 🍅\n")
+        self.console.print("🍅 Pomodoro Terminal 🍅")
         # mostra a última fase, caso exista
         if(self.session.phase_history and self.session.phase_history[-1]): 
             last_phase = self.session.phase_history[-1]
-            self.console.print(f"📊 Última sessão: {last_phase.name} | Tempo: {last_phase.get_formatted_elapsed_time()}\n")
+            self.console.print(f"📊 Última sessão: {last_phase.label} | Tempo: {last_phase.get_formatted_elapsed_time()}\n")
             
         self.console.print("Menu de Fases:")
         self.console.print(f"[1] Iniciar {settings['work']['label']}\t|\t[2] {settings['short_break']['label']}\t|\t[3] {settings['long_break']['label']}\n[S] Configurações\t|\t[Q] Sair\n")
@@ -32,13 +32,12 @@ class PomodoroCLI:
         self.console.clear()        
         self.console.print("🍅 Pomodoro Terminal 🍅")
         #
-        self.console.print("\n📊 Resumo da sessão:")
+        self.console.print("\n📊 [strong]Resumo da sessão:[strong/]")
         self.console.print(f"🧠 Tempo total em {settings['work']["label"]}:\t{self.session.get_time_str('work')}")
         self.console.print(f"😌 Tempo total em {settings['short_break']["label"]}:\t{self.session.get_time_str('short_break')}")
         self.console.print(f"🛌 Tempo total em {settings['long_break']["label"]}:\t{self.session.get_time_str('long_break')}")
         #
-        #self.session.show_summary()
-        self.console.print("\nAté a próxima!")
+        self.console.print("\n👋 Até a próxima!\n")
         
     def render_status(self):
         phase = self.session.current_phase
@@ -51,11 +50,12 @@ class PomodoroCLI:
         
         elapsed_seconds = phase.get_elapsed_time()
         isFinished = phase.is_running and not phase.is_paused and elapsed_seconds and elapsed_seconds >= phase.duration_seconds
-        finishedMessage = f"✅ Fase '{phase.name}' finalizada ({phase.duration_minutes} minutos)." if isFinished else ""
+        finishedMessage = f"✅ Fase '{phase.label}' finalizada ({phase.duration_minutes} minutos)." if isFinished else ""
 
         content = (
+            "🍅 Pomodoro Terminal 🍅\n\n"
             "Controles: [P] Pausar  [R] Retomar  [F] Finalizar  [Q] Sair\n\n"
-            f"⏱️ Fase: {phase.name}\n"
+            f"⏱️ Fase: {phase.label}\n"
             f"Duração: {phase.duration_minutes} minutos\n"
             f"Status: {status}\n"
             f"Tempo: {elapsed}\n"
@@ -70,7 +70,6 @@ class PomodoroCLI:
         current_phase = self.session.current_phase
         # limpa o terminal
         self.console.clear()
-        self.console.print(f"Iniciando fase: {current_phase.name} ({current_phase.duration_minutes} minutos)\n")
 
         last_render = ""
 
@@ -96,9 +95,6 @@ class PomodoroCLI:
                     self.is_running = False
                     break
 
-        self.console.clear()
-        self.console.print(f"Fase '{phase_config["label"]}' finalizada. Tempo total: {current_phase.get_formatted_elapsed_time() if current_phase else '00:00:00'}.\n")
-
     def run(self):
         show_menu = True
         while self.is_running:
@@ -122,9 +118,6 @@ class PomodoroCLI:
                     show_menu = True
                 elif key == 'q':
                     self.is_running = False
-            #else:
-                #self.session.finalize_phase()
-                #show_menu = True
                 
             time.sleep(0.2)  # reduz uso de CPU
 

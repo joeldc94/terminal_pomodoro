@@ -48,13 +48,6 @@ class PomodoroSession:
             
         self.phase_history.append(self.current_phase)
         self.current_phase = None
-        
-    def show_summary(self) -> None:
-        """Mostra o tempo acumulado por tipo de fase."""
-        print("\n📊 Resumo da sessão:")
-        print(f"🧠 Tempo total de foco: {self._format_time(self.total_work_time)}")
-        print(f"😌 Descanso curto:      {self._format_time(self.total_short_break_time)}")
-        print(f"🛌 Descanso longo:      {self._format_time(self.total_long_break_time)}")
 
     def _format_time(self, seconds: float) -> str:
         from datetime import timedelta
