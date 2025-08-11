@@ -42,7 +42,7 @@ class ConfigFile:
         with open(self.file_path, 'r', encoding='utf-8') as f:
             try:
                 self.settings = json.load(f)
-            except json.JSONEncoderError as e:
+            except json.JSONDecodeError as e:
                 print(f"Erro ao ler o arquivo de configuração: {e}")
                 self.settings = {}
                 

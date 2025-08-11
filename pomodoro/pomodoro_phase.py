@@ -26,6 +26,7 @@ class PomodoroPhase:
         self.elapsed_seconds = None
         self.is_running = False
         self.is_paused = False
+        self._alerted_finish = False # controla se já alertou o final da fase
         
     def start(self) -> None:
         """Inicia a contagem da fase."""
@@ -61,10 +62,23 @@ class PomodoroPhase:
             self.elapsed_seconds = (self.end_time - self.start_time).total_seconds()
             #print(f"\n✅\tFase '{self.name}' finalizada. Tempo total: {int(self.elapsed_seconds)} segundos.")
             
+    def is_finished(self) -> bool:
+        """Retorna True se a fase já atingiu ou ultrapassou o tempo de duração."""
+        if not self.is_running and not self.is_paused:
+            return False
+        return self.get_elapsed_time() >= self.duration_seconds
+    
+    def should_alert_finish(self) -> bool:
+        """Retorna True apenas na primeira vez que a fase termina, e dispara o flag para evitar repetições."""
+        if self.is_finished() and not self._alerted_finish:
+            self._alerted_finish = True
+            return True
+        return False
+            
     def get_elapsed_time(self) -> float:
         """Retorna o tempo decorrido até o momento."""
         if self.start_time is None:
-            return 0
+            return 0.0
         if self.is_paused:
             return (self.pause_time - self.start_time).total_seconds()
         elif self.is_running:
@@ -72,6 +86,11 @@ class PomodoroPhase:
         else:
             return self.elapsed_seconds
         
+        
+    def time_remaining(self) -> float:
+        """Retorna o tempo restante em segundos para o fim da fase."""
+        return max(0, self.duration_seconds - self.get_elapsed_time())
+
     def get_formatted_elapsed_time(self) -> str:
         """Retorna o tempo decorrido formatado como HH:MM:SS"""
         return str(timedelta(seconds=int(self.get_elapsed_time())))
