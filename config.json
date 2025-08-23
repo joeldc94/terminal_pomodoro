@@ -1,18 +1,15 @@
 {
     "work": {
         "label": "Foco",
-        "color": "red",
-        "duration": 1
+        "duration": 25
     },
     "short_break": {
         "label": "Descanso Curto",
-        "color": "blue",
-        "duration": 1
+        "duration": 5
     },
     "long_break": {
         "label": "Descanso Longo",
-        "color": "green",
-        "duration": 1
+        "duration": 15
     },
-    "cycles": 2
+    "cycles": 4
 }

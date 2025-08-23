@@ -8,17 +8,14 @@ class ConfigFile:
     DEFAULT_CONFIGURATIONS = {
         "work": {
             "label": "Foco",
-            "color": "red",
             "duration": 25
         },
         "short_break": {
             "label": "Descanso Curto",
-            "color": "blue",
             "duration": 5
         },
         "long_break": {
             "label": "Descanso Longo",
-            "color": "green",
             "duration": 15
         },
         "cycles": 4
@@ -67,7 +64,7 @@ class ConfigFile:
         
     def interactive_setup(self):
         """Solicita interativamente as configurações ao usuário e grava no arquivo."""
-        print("Configuração interativa do Pomodoro.\nPressione Enter para manter os valores padrão mostrados entre parênteses.\n")
+        print("Configuração interativa do Pomodoro.\n")
 
         def ask_int(prompt, default):
             while True:
@@ -95,6 +92,8 @@ class ConfigFile:
 
         # fases e nomes usados internamente
         phases = ['work', 'short_break', 'long_break']
+        
+        print("\n\nPressione Enter para manter os valores padrão mostrados entre parênteses:\n")
 
         # Solicitar tempos de cada fase
         for phase_key in phases:
@@ -106,20 +105,13 @@ class ConfigFile:
         # Solicitar a quantidade de ciclos
         cycles = settings.get('cycles', 4)
         settings['cycles'] = ask_int(
-            "Insira a quantidade de ciclos 'Foco' + 'Descanso Curto' antes da fase 'Descanso Longo'", cycles)
+            "Insira a quantidade de ciclos de 'Foco' antes da fase 'Descanso Longo'", cycles)
 
         # Solicitar os nomes de cada fase — mostrar a chave interna e o valor atual
         for phase_key in phases:
             phase_info = settings[phase_key]
             prompt = f"Insira o nome da fase '{phase_key}'"
             phase_info['label'] = ask_str(prompt, phase_info['label'])
-            settings[phase_key] = phase_info
-
-        # Solicitar as cores
-        for phase_key in phases:
-            phase_info = settings[phase_key]
-            prompt = f"Insira a cor da fase '{phase_info['label']}'"
-            phase_info['color'] = ask_str(prompt, phase_info['color'])
             settings[phase_key] = phase_info
 
         # Atualiza o atributo da classe

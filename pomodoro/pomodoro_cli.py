@@ -19,8 +19,43 @@ class PomodoroCLI:
             "1": "work",
             "2": "short_break",
             "3": "long_break"
+        }        
+        self.COLORS = {
+            "work": "red",
+            "short_break": "blue",
+            "long_break": "green"
         }
 
+    def show_about_message(self):        
+        self.console.clear()
+        self.console.print("🍅 Pomodoro Terminal 🍅", style="bold red")
+        self.console.print("─" * 63, style="dim")
+        self.console.print("Sobre a Técnica Pomodoro:", style="bold")        
+        self.console.print('A técnica Pomodoro foi criada pelo italiano Francesco Cirillo, no final dos anos 1980, para ajudar no foco e na produtividade. Ela consiste em dividir o trabalho em períodos de 25 minutos de foco total, chamados "Pomodoros", intercalados com descansos curtos de 5 minutos. Após completar quatro Pomodoros, faz-se uma pausa maior, de 15 minutos. Essa alternância entre concentração e descanso mantém o cérebro focado na tarefa, evitando o cansaço e ajudando a restaurar a energia e a atenção.')
+        self.console.print("─" * 63, style="dim")
+            
+        input("Pressione [ENTER] para continuar...")
+        
+        self.console.clear()
+        self.console.print("🍅 Pomodoro Terminal 🍅", style="bold red")
+        self.console.print("─" * 63, style="dim")            
+        self.console.print("Sobre o Pomodoro Terminal:", style="bold")        
+        self.console.print('O Pomodoro Terminal é uma aplicação simples, desenvolvida como um exercício didático em Python. Nela, implementei um temporizador para a técnica Pomodoro, utilizando o terminal como interface com o usuário.\nA aplicação monitora o tempo das três fases da técnica, emitindo um alerta sonoro discreto ao final de cada fase e indicando a próxima etapa, que inicia mediante comando do usuário. Os tempos e nomes das fases podem ser personalizados no menu "Configurações", adaptando-se às suas preferências.\nAo encerrar uma sessão, o programa exibe um resumo do tempo total acumulado em cada fase, oferecendo uma visão clara do seu desempenho.')
+        self.console.print("─" * 63, style="dim")
+        
+        input("Pressione [ENTER] para continuar...") 
+        
+        self.console.clear()
+        self.console.print("🍅 Pomodoro Terminal 🍅", style="bold red")
+        self.console.print("─" * 63, style="dim") 
+        self.console.print("Sobre o Autor:", style="bold")        
+        self.console.print('Joel De Conto, Engenheiro de Controle e Automação e desenvolvedor iniciante. https://github.com/joeldc94/')
+        self.console.print("─" * 63, style="dim")
+            
+        input("Pressione [ENTER] para voltar ao Menu inicial...") 
+            
+        self.show_idle_menu()
+                
     def show_idle_menu(self):
         settings = self.config.settings
         self.console.clear()
@@ -34,7 +69,7 @@ class PomodoroCLI:
             last_phase = self.session.phase_history[-1]
             self.console.print("📊 ", style="cyan", end="")
             self.console.print("Última sessão: ", style="dim", end="")
-            self.console.print(f"{last_phase.label}", style="bold " + settings[last_phase.name]['color'], end="")
+            self.console.print(f"{last_phase.label}", style="bold " + self.COLORS[last_phase.name], end="")
             self.console.print(" | Tempo: ", style="dim", end="")
             self.console.print(f"{last_phase.get_formatted_elapsed_time()}", style="cyan")
             self.console.print("─" * 63, style="dim")
@@ -48,20 +83,24 @@ class PomodoroCLI:
         
         # Opções de fases
         self.console.print("[1] ", style="bold white", end="")
-        self.console.print(f"{settings['work']['label']}", style="bold " + settings['work']['color'], end="")
+        self.console.print(f"{settings['work']['label']}", style="bold " + self.COLORS["work"], end="")
         self.console.print(" | ", style="dim", end="")
         
         self.console.print("[2] ", style="bold white", end="")
-        self.console.print(f"{settings['short_break']['label']}", style="bold " + settings['short_break']['color'], end="")
+        self.console.print(f"{settings['short_break']['label']}", style="bold " + self.COLORS["short_break"], end="")
         self.console.print(" | ", style="dim", end="")
         
         self.console.print("[3] ", style="bold white", end="")
-        self.console.print(f"{settings['long_break']['label']}", style="bold " + settings['long_break']['color'], end="\n")
+        self.console.print(f"{settings['long_break']['label']}", style="bold " + self.COLORS["long_break"], end="\n")
         
-        # Outras opções (configurações e sair)
+        # Outras opções (configurações, sobre e sair)
         self.console.print("Outras opções: ", style="dim", end="")
         self.console.print("[S] ", style="bold", end="")
         self.console.print("Configurações", style="bold", end="")
+        self.console.print(" | ", style="dim", end="")
+        
+        self.console.print("[A] ", style="bold", end="")
+        self.console.print("Sobre", style="bold", end="")
         self.console.print(" | ", style="dim", end="")
                 
         self.console.print("[Q] ", style="bold", end="")
@@ -132,7 +171,7 @@ class PomodoroCLI:
 
         # Informações da fase
         content.append("Fase: ", style="dim")
-        content.append(f"{phase.label}\n", style="bold " + phase.color)
+        content.append(f"{phase.label}\n", style="bold " + self.COLORS[phase.name])
         
         content.append("Duração: ", style="dim")
         content.append(f"{phase.duration_minutes} minutos\n", style="cyan")
@@ -157,7 +196,7 @@ class PomodoroCLI:
             
             content.append("[ESPAÇO] ", style="bold bright_yellow")
             content.append("para iniciar: ", style="dim")
-            content.append(f"{self.config.settings[self.session.next_phase]['label']}\n", style="italic " + self.config.settings[self.session.next_phase]['color'])
+            content.append(f"{self.config.settings[self.session.next_phase]['label']}\n", style="italic " + self.COLORS[self.session.next_phase])
             
             content.append("(O tempo continua contando até você finalizar)\n", style="dim italic")
             content.append("─" * 63, style="dim green")
@@ -186,7 +225,7 @@ class PomodoroCLI:
     def run_phase(self, phase_name):
         # Inicia a fase com as configurações recebidas
         phase_config = self.config.settings[phase_name]
-        self.session.start_phase(phase_name, phase_config["label"], phase_config["color"], phase_config["duration"])
+        self.session.start_phase(phase_name, phase_config["label"], self.COLORS[phase_name], phase_config["duration"])
         current_phase = self.session.current_phase
 
         self.console.clear()
@@ -239,6 +278,10 @@ class PomodoroCLI:
                 self.console.clear()
                 self.config.interactive_setup()
                 self.session.cycles_config = self.config.settings.get("cycles", 4)
+                show_idle_menu = True  # sempre mostra menu após mexer nas configs
+            elif key == 'a':
+                self.console.clear()
+                self.show_about_message()
                 show_idle_menu = True  # sempre mostra menu após mexer nas configs
             elif key == 'q':
                 self.is_running = False
