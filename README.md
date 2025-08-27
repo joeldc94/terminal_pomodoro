@@ -1,4 +1,6 @@
 # ⏱️ Terminal Pomodoro
+![license](https://img.shields.io/badge/license-MIT-blue)
+![python-version](https://img.shields.io/badge/python-3.10%2B-yellow)
 
 ## 📖 Sobre o Projeto
 Esta é uma implementação funcional de um timer Pomodoro interativo para terminal, desenvolvido com Python com objetivo de aprendizado e prática de programação orientada a objetos.
